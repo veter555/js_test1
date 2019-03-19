@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+
+        <iframe id="first" sandbox="allow-same-origin" src="1.html"></iframe>
+        <iframe id="second"  sandbox="allow-same-origin allow-scripts allow-forms" src="1.html"></iframe>
+
+    </body>
+    <script >
+        window.onload = function () {
+            var first = document.getElementById('first');
+            var firstDoc = first.contentWindow.document.body.firstElementChild.getElementsByTagName('li');
+
+            var urlName = first.contentWindow.document.body.getElementsByTagName('div');
+            var url = '';
+            for (var j = 0; j < urlName.length; j++) {
+                if (j == 1) {
+                    url += filter2(urlName[j].children[0].innerText, '/') + '/';
+                } else {
+                    url += filter2(urlName[j].children[0].innerText, '"');
+                }
+            }
+            var getForm = " <form action='" + url + "' method='post'>";
+            for (var i = 0; i < firstDoc.length; i++) {
+                getForm += "<input type='text' name='" + firstDoc[i].getAttribute('name') + "' value='" + filter(firstDoc[i].innerText) + "'></br>";
+            }
+            var getForm1 = getForm + '<input type="submit" value="contentDocument"></form></br>';
+            var getForm2 = getForm + '<input type="submit" value="postMessage"></form></br>';
+            
+
+            var second = document.getElementById('second');
+            second.contentDocument.body.innerHTML = '';
+            second.contentDocument.body.innerHTML = getForm1;
+
+            second.contentWindow.postMessage(getForm2, '*');
+
+
+            function filter(str) {
+                return str.replace(/[^a-z]/gim, '');
+            }
+            function filter2(select, attr) {
+                return select.substring(select.indexOf(attr) + 1, select.indexOf(attr, select.indexOf(attr) + 1));
+            }
+        };
+        // код тут 
+    </script>
+</html>
